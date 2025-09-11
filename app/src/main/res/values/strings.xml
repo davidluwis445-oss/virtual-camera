@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Virtual Camera</string>
+    <string name="permission_rationale">This app needs camera permissions to work properly</string>
+</resources>
