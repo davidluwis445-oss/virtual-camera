@@ -5,6 +5,9 @@
 #include <string>
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
+#include <thread>
+#include <mutex>
+#include <queue>
 
 class VideoProcessor {
 public:
@@ -16,6 +19,8 @@ public:
     int getHeight() const;
     int getFrameRate() const;
     bool isInitialized() const;
+    void startDecoding();
+    void stopDecoding();
 
 private:
     AAsset* videoAsset;
@@ -25,9 +30,17 @@ private:
     int height;
     int frameRate;
     bool initialized;
-
+    bool decoding;
+    
+    // Video decoding thread
+    std::thread decodeThread;
+    std::mutex frameMutex;
+    std::queue<std::vector<uint8_t>> frameQueue;
+    
     void parseVideoHeader();
     std::vector<uint8_t> generateTestFrame(int frameNumber);
+    void decodeVideoFrames();
+    std::vector<uint8_t> decodeFrameFromFile();
 };
 
 #endif // VIRTUALCAMERA_VIDEO_PROCESSOR_H

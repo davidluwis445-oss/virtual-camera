@@ -5,20 +5,35 @@
 
 #define LOG_TAG "VideoProcessor"
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
 VideoProcessor::VideoProcessor(AAssetManager* assetManager, const std::string& videoPath)
         : videoAsset(nullptr), videoSize(0), currentPosition(0), width(640), height(480),
-          frameRate(30), initialized(false) {
+          frameRate(30), initialized(false), decoding(false) {
 
-    if (assetManager) {
+    // Check if it's a file path (external video) or asset path
+    if (videoPath.length() > 0 && videoPath[0] == '/') {
+        // External file path
+        FILE* file = fopen(videoPath.c_str(), "rb");
+        if (file) {
+            fseek(file, 0, SEEK_END);
+            videoSize = ftell(file);
+            fseek(file, 0, SEEK_SET);
+            fclose(file);
+            
+            LOGD("Loaded external video file: %s, size: %zu", videoPath.c_str(), videoSize);
+            initialized = true;
+            parseVideoHeader();
+        } else {
+            LOGD("Failed to open external video file: %s", videoPath.c_str());
+        }
+    } else if (assetManager) {
+        // Asset path
         videoAsset = AAssetManager_open(assetManager, videoPath.c_str(), AASSET_MODE_BUFFER);
         if (videoAsset) {
             videoSize = AAsset_getLength(videoAsset);
             LOGD("Loaded video asset: %s, size: %zu", videoPath.c_str(), videoSize);
             initialized = true;
-
-            // For demo purposes, we'll use test patterns
-            // In a real implementation, you would parse the video file here
             parseVideoHeader();
         } else {
             LOGD("Failed to open video asset: %s", videoPath.c_str());
@@ -27,6 +42,7 @@ VideoProcessor::VideoProcessor(AAssetManager* assetManager, const std::string& v
 }
 
 VideoProcessor::~VideoProcessor() {
+    stopDecoding();
     if (videoAsset) {
         AAsset_close(videoAsset);
     }
@@ -63,18 +79,17 @@ std::vector<uint8_t> VideoProcessor::getNextFrame() {
         return std::vector<uint8_t>(width * height * 3, 0);
     }
 
-    // For demo purposes, generate a test pattern
-    // In a real implementation, you would decode the actual video frames
-    static int frameCounter = 0;
-    std::vector<uint8_t> frame = generateTestFrame(frameCounter++);
-
-    // Simulate video playback by seeking in the asset
-    if (videoAsset) {
-        currentPosition = (currentPosition + 100) % videoSize; // Simplified
-        AAsset_seek(videoAsset, currentPosition, SEEK_SET);
+    // Try to get a decoded frame from the queue
+    std::lock_guard<std::mutex> lock(frameMutex);
+    if (!frameQueue.empty()) {
+        std::vector<uint8_t> frame = frameQueue.front();
+        frameQueue.pop();
+        return frame;
     }
-
-    return frame;
+    
+    // If no decoded frames available, generate a test frame
+    static int frameCounter = 0;
+    return generateTestFrame(frameCounter++);
 }
 
 std::vector<uint8_t> VideoProcessor::generateTestFrame(int frameNumber) {
@@ -114,4 +129,59 @@ int VideoProcessor::getFrameRate() const {
 
 bool VideoProcessor::isInitialized() const {
     return initialized;
+}
+
+void VideoProcessor::startDecoding() {
+    if (decoding || !initialized) {
+        return;
+    }
+    
+    decoding = true;
+    decodeThread = std::thread(&VideoProcessor::decodeVideoFrames, this);
+    LOGD("Video decoding started");
+}
+
+void VideoProcessor::stopDecoding() {
+    if (!decoding) {
+        return;
+    }
+    
+    decoding = false;
+    if (decodeThread.joinable()) {
+        decodeThread.join();
+    }
+    LOGD("Video decoding stopped");
+}
+
+void VideoProcessor::decodeVideoFrames() {
+    LOGD("Starting video frame decoding thread");
+    
+    while (decoding) {
+        try {
+            std::vector<uint8_t> frame = decodeFrameFromFile();
+            if (!frame.empty()) {
+                std::lock_guard<std::mutex> lock(frameMutex);
+                frameQueue.push(frame);
+                
+                // Limit queue size to prevent memory issues
+                if (frameQueue.size() > 10) {
+                    frameQueue.pop();
+                }
+            }
+            
+            // Maintain frame rate
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000 / frameRate));
+        } catch (const std::exception& e) {
+            LOGE("Error in video decoding: %s", e.what());
+        }
+    }
+    
+    LOGD("Video frame decoding thread stopped");
+}
+
+std::vector<uint8_t> VideoProcessor::decodeFrameFromFile() {
+    // In a real implementation, you would use FFmpeg or MediaCodec here
+    // For now, we'll generate test frames
+    static int frameCounter = 0;
+    return generateTestFrame(frameCounter++);
 }

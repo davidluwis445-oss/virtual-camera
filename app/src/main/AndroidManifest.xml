@@ -21,6 +21,11 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
+    <!-- Root permissions for system-wide virtual camera -->
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -41,12 +46,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-            <service
-                android:name=".service.VirtualCameraService"
-                android:enabled="true"
-                android:exported="false" />
             
-            <activity
+            <!--<activity
                 android:name=".test.CameraTestActivity"
                 android:exported="true"
                 android:label="Camera Test"
@@ -56,6 +57,17 @@
                     <category android:name="android.intent.category.LAUNCHER" />
                 </intent-filter>
             </activity>
+            
+            <activity
+                android:name=".GhostCamActivity"
+                android:exported="true"
+                android:label="GhostCam - System Virtual Camera"
+                android:theme="@style/Theme.VirtualCamera">
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
+            </activity>-->
         </application>
 
 </manifest>

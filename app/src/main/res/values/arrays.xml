@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Video quality options -->
+    <string-array name="video_quality_options">
+        <item>High Quality (1080p)</item>
+        <item>Medium Quality (720p)</item>
+        <item>Low Quality (480p)</item>
+    </string-array>
+    
+    <!-- Camera resolution options -->
+    <string-array name="camera_resolution_options">
+        <item>1920x1080 (Full HD)</item>
+        <item>1280x720 (HD)</item>
+        <item>854x480 (FWVGA)</item>
+        <item>640x480 (VGA)</item>
+    </string-array>
+    
+    <!-- Root status options -->
+    <string-array name="root_status_options">
+        <item>Granted</item>
+        <item>Required</item>
+        <item>Denied</item>
+    </string-array>
+</resources>
