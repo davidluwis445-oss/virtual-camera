@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <!-- Video Surface View -->
+    <SurfaceView
+        android:id="@+id/surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true" />
+
+    <!-- Camera Controls Overlay -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@android:color/transparent">
+
+        <!-- Capture Button -->
+        <Button
+            android:id="@+id/capture_button"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="📸 Capture"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/button_capture"
+            android:elevation="4dp" />
+
+        <!-- Switch Camera Button -->
+        <Button
+            android:id="@+id/switch_button"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:text="🔄 Switch"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/button_switch"
+            android:elevation="4dp" />
+
+        <!-- Close Button -->
+        <Button
+            android:id="@+id/close_button"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="❌ Close"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/button_close"
+            android:elevation="4dp" />
+
+    </LinearLayout>
+
+    <!-- Virtual Camera Indicator -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="🎥 Virtual Camera Active"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:background="#80000000"
+        android:padding="8dp"
+        android:elevation="4dp" />
+
+</RelativeLayout>

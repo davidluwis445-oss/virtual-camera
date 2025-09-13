@@ -22,6 +22,7 @@ import com.app001.virtualcamera.screens.PreviewScreen
 import com.app001.virtualcamera.screens.SettingsScreen
 import com.app001.virtualcamera.test.CameraTestActivity
 import com.app001.virtualcamera.ui.theme.VirtualCameraTheme
+import java.io.File
 
 class MainActivity : ComponentActivity() {
     private val videoPickerLauncher = registerForActivityResult(
@@ -81,9 +82,9 @@ class MainActivity : ComponentActivity() {
                            )
                        }
                        
-                       composable(Screen.Advanced.route) {
-                           AdvancedSetupScreen()
-                       }
+                composable(Screen.Advanced.route) {
+                    AdvancedSetupScreen(selectedVideoPath = null) // For now, pass null
+                }
                        
                        composable(Screen.Settings.route) {
                            SettingsScreen()

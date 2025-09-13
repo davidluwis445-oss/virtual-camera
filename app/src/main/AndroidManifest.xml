@@ -42,8 +42,41 @@
             android:theme="@style/Theme.VirtualCamera">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
+            <!-- Camera intent filters to make this app act as a camera -->
+            <intent-filter>
+                <action android:name="android.media.action.IMAGE_CAPTURE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            
+            <intent-filter>
+                <action android:name="android.media.action.VIDEO_CAPTURE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            
+            <intent-filter>
+                <action android:name="android.media.action.IMAGE_CAPTURE_SECURE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        
+        <!-- Virtual Camera Activity -->
+        <activity
+            android:name=".camera.VirtualCameraActivity"
+            android:exported="true"
+            android:label="Virtual Camera"
+            android:theme="@style/Theme.VirtualCamera"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.media.action.IMAGE_CAPTURE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            
+            <intent-filter>
+                <action android:name="android.media.action.VIDEO_CAPTURE" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
             
@@ -68,6 +101,20 @@
                     <category android:name="android.intent.category.LAUNCHER" />
                 </intent-filter>
             </activity>-->
+            
+        <!-- Virtual Camera Service -->
+        <service
+            android:name=".service.VirtualCameraService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":virtualcamera" />
+            
+        <!-- Video Feed Service -->
+        <service
+            android:name=".service.VideoFeedService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":videofeed" />
         </application>
 
 </manifest>
