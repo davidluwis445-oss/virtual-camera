@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
+import com.app001.virtualcamera.camera.CameraIntentHandler
+import com.app001.virtualcamera.camera.SystemCameraInterceptor
+import com.app001.virtualcamera.utils.VideoPathManager
 import java.io.DataOutputStream
 import java.io.IOException
 
@@ -218,12 +221,69 @@ class SystemVirtualCamera(private val context: Context) {
     }
     
     /**
+     * Start system-wide camera service
+     * This makes the virtual camera available to all apps
+     */
+    fun startSystemWideCameraService(videoPath: String): Boolean {
+        return try {
+            Log.d(tag, "Starting system-wide camera service with video: $videoPath")
+            
+            // Initialize VideoPathManager
+            VideoPathManager.initialize(context)
+            
+            // Save the video path globally
+            VideoPathManager.setCurrentVideoPath(videoPath)
+            
+            // Start the system camera service
+            val serviceIntent = Intent(context, com.app001.virtualcamera.service.SystemCameraService::class.java).apply {
+                action = com.app001.virtualcamera.service.SystemCameraService.ACTION_START_SYSTEM_CAMERA
+            }
+            
+            context.startService(serviceIntent)
+            Log.d(tag, "System camera service started")
+            
+            // Also start the video feed service
+            val feedServiceIntent = Intent(context, com.app001.virtualcamera.service.VideoFeedService::class.java).apply {
+                action = com.app001.virtualcamera.service.VideoFeedService.ACTION_START_FEED
+                putExtra(com.app001.virtualcamera.service.VideoFeedService.EXTRA_VIDEO_PATH, videoPath)
+            }
+            
+            context.startService(feedServiceIntent)
+            Log.d(tag, "Video feed service started")
+            
+            // Launch the VirtualCameraActivity
+            val intent = Intent(context, com.app001.virtualcamera.camera.VirtualCameraActivity::class.java).apply {
+                putExtra(com.app001.virtualcamera.camera.VirtualCameraActivity.EXTRA_VIDEO_PATH, videoPath)
+                putExtra(com.app001.virtualcamera.camera.VirtualCameraActivity.EXTRA_IS_VIRTUAL_CAMERA, true)
+                putExtra(com.app001.virtualcamera.camera.VirtualCameraActivity.EXTRA_IS_FRONT_CAMERA, true) // Default to front camera
+                putExtra(com.app001.virtualcamera.camera.VirtualCameraActivity.EXTRA_CAMERA_MODE, "selfie") // Default to selfie mode
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            
+            context.startActivity(intent)
+            Log.d(tag, "Virtual camera activity launched")
+            
+            Log.d(tag, "System-wide camera service started successfully")
+            true
+        } catch (e: Exception) {
+            Log.e(tag, "Exception starting system-wide camera service: ${e.message}")
+            false
+        }
+    }
+    
+    /**
      * Start the virtual camera service with a video file
      * This provides system-wide camera replacement
      */
     fun startVirtualCameraService(videoPath: String): Boolean {
         return try {
             Log.d(tag, "Starting virtual camera service with video: $videoPath")
+            
+            // Initialize VideoPathManager if not already done
+            VideoPathManager.initialize(context)
+            
+            // Save the video path globally so external apps can access it
+            VideoPathManager.setCurrentVideoPath(videoPath)
             
             // Start the video feed service first
             val feedServiceIntent = Intent(context, com.app001.virtualcamera.service.VideoFeedService::class.java).apply {
@@ -238,6 +298,8 @@ class SystemVirtualCamera(private val context: Context) {
             val intent = Intent(context, com.app001.virtualcamera.camera.VirtualCameraActivity::class.java).apply {
                 putExtra(com.app001.virtualcamera.camera.VirtualCameraActivity.EXTRA_VIDEO_PATH, videoPath)
                 putExtra(com.app001.virtualcamera.camera.VirtualCameraActivity.EXTRA_IS_VIRTUAL_CAMERA, true)
+                putExtra(com.app001.virtualcamera.camera.VirtualCameraActivity.EXTRA_IS_FRONT_CAMERA, true) // Default to front camera
+                putExtra(com.app001.virtualcamera.camera.VirtualCameraActivity.EXTRA_CAMERA_MODE, "selfie") // Default to selfie mode
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
             
@@ -253,10 +315,118 @@ class SystemVirtualCamera(private val context: Context) {
             context.startService(serviceIntent)
             Log.d(tag, "Virtual camera service started")
             
+            // Start the camera provider service to handle external app requests
+            val providerIntent = Intent(context, com.app001.virtualcamera.service.CameraProviderService::class.java)
+            context.startService(providerIntent)
+            Log.d(tag, "Camera provider service started")
+            
             Log.d(tag, "Virtual camera service started successfully")
             true
         } catch (e: Exception) {
             Log.e(tag, "Exception starting virtual camera service: ${e.message}")
+            false
+        }
+    }
+    
+    /**
+     * Set this app as the default camera app
+     * This makes third-party apps use our virtual camera
+     */
+    fun setAsDefaultCameraApp(): Boolean {
+        return try {
+            Log.d(tag, "Setting app as default camera app")
+            
+            // Use CameraIntentHandler to set as preferred camera app
+            val success = CameraIntentHandler.setAsPreferredCameraApp(context)
+            
+            if (success) {
+                Log.d(tag, "Successfully set as preferred camera app")
+            } else {
+                Log.w(tag, "Failed to set as preferred camera app, trying alternative method")
+                
+                // Fallback: Open settings directly
+                val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                    data = android.net.Uri.fromParts("package", context.packageName, null)
+                }
+                
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+            }
+            
+            success
+        } catch (e: Exception) {
+            Log.e(tag, "Exception setting as default camera app: ${e.message}")
+            false
+        }
+    }
+    
+    /**
+     * Check if this app is the default camera app
+     */
+    fun isDefaultCameraApp(): Boolean {
+        return try {
+            val cameraIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+            val isDefault = CameraIntentHandler.canHandleCameraIntent(context, cameraIntent)
+            Log.d(tag, "Is default camera app: $isDefault")
+            isDefault
+        } catch (e: Exception) {
+            Log.e(tag, "Exception checking default camera app: ${e.message}")
+            false
+        }
+    }
+    
+    /**
+     * Set camera mode (front/back) for virtual camera
+     */
+    fun setCameraMode(isFrontCamera: Boolean): Boolean {
+        return try {
+            Log.d(tag, "Setting camera mode to: ${if (isFrontCamera) "front" else "back"}")
+            
+            // Save camera mode preference
+            val prefs = context.getSharedPreferences("virtual_camera_prefs", Context.MODE_PRIVATE)
+            prefs.edit().putBoolean("is_front_camera", isFrontCamera).apply()
+            
+            Log.d(tag, "Camera mode set successfully")
+            true
+        } catch (e: Exception) {
+            Log.e(tag, "Exception setting camera mode: ${e.message}")
+            false
+        }
+    }
+    
+    /**
+     * Get current camera mode
+     */
+    fun getCameraMode(): Boolean {
+        return try {
+            val prefs = context.getSharedPreferences("virtual_camera_prefs", Context.MODE_PRIVATE)
+            prefs.getBoolean("is_front_camera", true) // Default to front camera
+        } catch (e: Exception) {
+            Log.e(tag, "Exception getting camera mode: ${e.message}")
+            true // Default to front camera
+        }
+    }
+    
+    /**
+     * Force launch virtual camera for testing
+     * This can be used to test if the virtual camera works
+     */
+    fun forceLaunchVirtualCamera(): Boolean {
+        return try {
+            Log.d(tag, "Force launching virtual camera for testing")
+            
+            val cameraIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+            val success = CameraIntentHandler.forceLaunchVirtualCamera(context, cameraIntent)
+            
+            if (success) {
+                Log.d(tag, "Virtual camera launched successfully")
+            } else {
+                Log.e(tag, "Failed to launch virtual camera")
+            }
+            
+            success
+        } catch (e: Exception) {
+            Log.e(tag, "Exception force launching virtual camera: ${e.message}")
             false
         }
     }

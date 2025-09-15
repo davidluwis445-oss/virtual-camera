@@ -13,6 +13,7 @@
 
     <!-- Camera Controls Overlay -->
     <LinearLayout
+        android:id="@+id/camera_controls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -64,13 +65,14 @@
 
     <!-- Virtual Camera Indicator -->
     <TextView
+        android:id="@+id/camera_status_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="🎥 Virtual Camera Active"
-        android:textSize="18sp"
+        android:text="🎥 Virtual Camera Active - Front Camera (Selfie)"
+        android:textSize="16sp"
         android:textColor="@android:color/white"
         android:background="#80000000"
         android:padding="8dp"

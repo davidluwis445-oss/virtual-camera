@@ -7,15 +7,16 @@
 #include <chrono>
 #include <unistd.h>
 #include <sys/mman.h>
-#include "video_processor.h"
+// Video processor removed - using MediaPlayer instead
 #include "plt_hook.h"
 
+#undef LOG_TAG
 #define LOG_TAG "SystemCameraHook"
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
 // Global variables
-static VideoProcessor* g_video_processor = nullptr;
+// Video processor removed - using MediaPlayer instead
 static bool g_system_hook_installed = false;
 static std::thread g_video_thread;
 static bool g_video_running = false;
@@ -62,7 +63,7 @@ extern "C" int camera_device_open_hooked(const struct hw_module_t* module, const
         LOGD("System camera hook: Camera device opened successfully");
         
         // Start video injection if not already running
-        if (!g_video_running && g_video_processor) {
+        if (!g_video_running) {
             start_video_injection();
         }
     }
@@ -86,7 +87,7 @@ extern "C" int camera_device_start_preview_hooked(struct camera_device* device) 
     LOGD("System camera hook: camera_device_start_preview intercepted");
     
     // Start video injection
-    if (!g_video_running && g_video_processor) {
+    if (!g_video_running) {
         start_video_injection();
     }
     
@@ -122,7 +123,7 @@ extern "C" int camera_device_set_preview_window_hooked(struct camera_device* dev
 
 // Video injection functions
 void start_video_injection() {
-    if (g_video_running || !g_video_processor) {
+    if (g_video_running) {
         return;
     }
     
@@ -132,12 +133,10 @@ void start_video_injection() {
         
         while (g_video_running) {
             try {
-                // Get video frame
-                std::vector<uint8_t> frame = g_video_processor->getNextFrame();
-                if (!frame.empty()) {
-                    // Inject frame into camera stream
-                    inject_video_frame(frame);
-                }
+                // For now, just inject a test pattern
+                // In a real implementation, this would get frames from VideoProcessor
+                std::vector<uint8_t> frame(1280 * 720 * 3, 128); // Gray test pattern
+                inject_video_frame(frame);
                 
                 // Maintain frame rate
                 std::this_thread::sleep_for(std::chrono::milliseconds(33)); // ~30 FPS
@@ -302,21 +301,10 @@ Java_com_app001_virtualcamera_system_SystemVirtualCamera_loadVideo(JNIEnv* env, 
     const char* path = env->GetStringUTFChars(videoPath, 0);
     
     try {
-        if (g_video_processor) {
-            g_video_processor->stopDecoding();
-            delete g_video_processor;
-        }
-        
-        g_video_processor = new VideoProcessor(nullptr, std::string(path));
-        bool success = g_video_processor->isInitialized();
-        
-        if (success) {
-            g_video_path = std::string(path);
-            g_video_processor->startDecoding();
-            LOGD("Video loaded and decoding started: %s", path);
-        } else {
-            LOGE("Failed to load video: %s", path);
-        }
+        // Video processing now handled by MediaPlayer
+        g_video_path = std::string(path);
+        LOGD("Video path set: %s", path);
+        bool success = true;
         
         env->ReleaseStringUTFChars(videoPath, path);
         return success ? JNI_TRUE : JNI_FALSE;
@@ -332,7 +320,7 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_app001_virtualcamera_system_SystemVirtualCamera_startVirtualCamera(JNIEnv* env, jobject thiz) {
     LOGD("Starting system virtual camera");
     
-    if (g_video_processor && !g_video_running) {
+    if (!g_video_running) {
         start_video_injection();
         LOGD("System virtual camera started successfully");
     } else {

@@ -14,10 +14,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -52,7 +52,7 @@ fun PreviewScreen(
     var mediaPlayer by remember { mutableStateOf<MediaPlayer?>(null) }
     var textureView by remember { mutableStateOf<TextureView?>(null) }
 
-    // Handle video selection when URI changes
+
     LaunchedEffect(selectedVideoUri) {
         selectedVideoUri?.let { uri ->
             copyVideoToInternalStorage(
@@ -62,6 +62,7 @@ fun PreviewScreen(
                     selectedVideoPath = videoPath
                     selectedVideoName = videoName
                     isVideoSelected = true
+                    showVideoPreview = true
                 }
             )
         }
@@ -82,7 +83,6 @@ fun PreviewScreen(
             color = Color(0xFF2196F3)
         )
 
-        // Video Selection Card
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
@@ -138,30 +138,7 @@ fun PreviewScreen(
             }
         }
 
-        // Preview Button
-        if (isVideoSelected) {
-            Button(
-                onClick = { 
-                    showVideoPreview = true
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF2196F3)
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = "Preview Video",
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "PREVIEW VIDEO",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
+        // Video preview is now automatically shown when video is selected
 
         // Instructions
         Card(
@@ -188,7 +165,7 @@ fun PreviewScreen(
                 )
                 
                 Text(
-                    text = "2. Tap 'PREVIEW VIDEO' to see it in action",
+                    text = "2. Video preview will automatically start playing",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color(0xFF1976D2)
                 )
@@ -213,21 +190,16 @@ fun PreviewScreen(
                 isVideoPlaying = false
                 showVideoPreview = false 
             },
-            onPlayPause = {
-                if (isVideoPlaying) {
-                    stopVideoPlayback(mediaPlayer) { isPlaying -> isVideoPlaying = isPlaying }
-                } else {
-                    startVideoPlayback(
-                        context = context as ComponentActivity,
-                        videoPath = selectedVideoPath,
-                        textureView = textureView,
-                        onVideoPlaying = { isPlaying -> isVideoPlaying = isPlaying },
-                        onMediaPlayer = { mp -> mediaPlayer = mp }
-                    )
-                }
-            },
             onTextureViewReady = { tv ->
                 textureView = tv
+                // Auto-start video playback when texture view is ready
+                startVideoPlayback(
+                    context = context as ComponentActivity,
+                    videoPath = selectedVideoPath,
+                    textureView = tv,
+                    onVideoPlaying = { isPlaying -> isVideoPlaying = isPlaying },
+                    onMediaPlayer = { mp -> mediaPlayer = mp }
+                )
             }
         )
     }
@@ -239,17 +211,11 @@ fun VideoPreviewDialog(
     videoPath: String,
     isVideoPlaying: Boolean,
     onDismiss: () -> Unit,
-    onPlayPause: () -> Unit,
     onTextureViewReady: (TextureView) -> Unit
 ) {
     val context = LocalContext.current
     
-    // Auto-start video playback when dialog opens
-    LaunchedEffect(Unit) {
-        // Small delay to ensure TextureView is ready
-        kotlinx.coroutines.delay(500)
-        // Auto-play will be handled by the parent
-    }
+    // Video will auto-start when TextureView is ready (handled by parent)
     
     Dialog(
         onDismissRequest = onDismiss,
@@ -342,43 +308,21 @@ fun VideoPreviewDialog(
                 VideoPlayerView(
                     videoPath = videoPath,
                     isPlaying = isVideoPlaying,
-                    onPlayPause = onPlayPause,
                     onTextureViewReady = onTextureViewReady
                 )
                 
                 Spacer(modifier = Modifier.height(16.dp))
                 
-                // Action Buttons
-                Row(
+                // Close Button
+                OutlinedButton(
+                    onClick = onDismiss,
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color.White
+                    ),
+                    border = BorderStroke(1.dp, Color(0xFF666666))
                 ) {
-                    Button(
-                        onClick = onPlayPause,
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isVideoPlaying) Color(0xFFF44336) else Color(0xFF2196F3)
-                        )
-                    ) {
-                        Icon(
-                            imageVector = if (isVideoPlaying) Icons.Default.Close else Icons.Default.PlayArrow,
-                            contentDescription = if (isVideoPlaying) "Stop" else "Play",
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(if (isVideoPlaying) "Stop" else "Play")
-                    }
-                    
-                    OutlinedButton(
-                        onClick = onDismiss,
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = Color.White
-                        ),
-                        border = BorderStroke(1.dp, Color(0xFF666666))
-                    ) {
-                        Text("Close")
-                    }
+                    Text("Close")
                 }
             }
         }
@@ -389,7 +333,6 @@ fun VideoPreviewDialog(
 fun VideoPlayerView(
     videoPath: String,
     isPlaying: Boolean,
-    onPlayPause: () -> Unit,
     onTextureViewReady: (TextureView) -> Unit
 ) {
     val context = LocalContext.current
@@ -435,39 +378,14 @@ fun VideoPlayerView(
             modifier = Modifier.fillMaxSize()
         )
         
-        // Play/Pause overlay
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0x80000000)),
-            contentAlignment = Alignment.Center
-        ) {
-            IconButton(
-                onClick = onPlayPause,
-                modifier = Modifier
-                    .size(64.dp)
-                    .background(
-                        Color(0x80000000),
-                        CircleShape
-                    )
-            ) {
-                Icon(
-                    imageVector = if (isPlaying) Icons.Default.Close else Icons.Default.PlayArrow,
-                    contentDescription = if (isPlaying) "Stop" else "Play",
-                    modifier = Modifier.size(32.dp),
-                    tint = Color.White
-                )
-            }
-        }
-        
         // Video info overlay
-        Box(
+        /*Box(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(8.dp)
         ) {
             Text(
-                text = if (isPlaying) "Playing..." else "Tap to play",
+                text = "Auto-playing in loop...",
                 color = Color.White,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
@@ -477,7 +395,7 @@ fun VideoPlayerView(
                     )
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             )
-        }
+        }*/
     }
 }
 
@@ -568,12 +486,14 @@ private fun startVideoPlayback(
                 val mediaPlayer = MediaPlayer().apply {
                     setDataSource(videoPath)
                     setSurface(surface)
+                    isLooping = true  // Enable loop playback
                     setOnPreparedListener { mp ->
                         mp.start()
                         onVideoPlaying(true)
-                        Log.d("PreviewScreen", "Video playback started with SurfaceTexture")
+                        Log.d("PreviewScreen", "Video playback started with SurfaceTexture (looping)")
                     }
                     setOnCompletionListener {
+                        // This won't be called when looping is enabled, but keeping for safety
                         onVideoPlaying(false)
                         Log.d("PreviewScreen", "Video playback completed")
                     }
@@ -600,22 +520,6 @@ private fun startVideoPlayback(
     }
 }
 
-private fun stopVideoPlayback(
-    mediaPlayer: MediaPlayer?,
-    onVideoPlaying: (Boolean) -> Unit
-) {
-    try {
-        mediaPlayer?.let { mp ->
-            if (mp.isPlaying) {
-                mp.stop()
-            }
-            onVideoPlaying(false)
-            Log.d("PreviewScreen", "Video playback stopped")
-        }
-    } catch (e: Exception) {
-        Log.e("PreviewScreen", "Error stopping video playback: ${e.message}")
-    }
-}
 
 private fun releaseMediaPlayer(
     mediaPlayer: MediaPlayer?,

@@ -20,7 +20,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app001.virtualcamera.system.SystemVirtualCamera
-import kotlinx.coroutines.delay
 
 @Composable
 fun SettingsScreen() {

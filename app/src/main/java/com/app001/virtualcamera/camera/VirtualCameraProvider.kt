@@ -1,119 +1,80 @@
 package com.app001.virtualcamera.camera
 
 import android.content.Context
-import android.hardware.camera2.CameraCharacteristics
-import android.hardware.camera2.CameraDevice
-import android.hardware.camera2.CameraManager
+import android.content.Intent
 import android.util.Log
-import android.util.Size
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
+import com.app001.virtualcamera.utils.VideoPathManager
 
 /**
- * Virtual Camera Provider that creates a fake camera device
- * This simulates a real camera for system-wide replacement
+ * Virtual Camera Provider that handles camera requests from other apps
+ * This acts as a bridge between external apps and our virtual camera
  */
-class VirtualCameraProvider(private val context: Context) {
-    
+class VirtualCameraProvider {
     companion object {
         private const val TAG = "VirtualCameraProvider"
-        private const val VIRTUAL_CAMERA_ID = "virtual_camera_0"
-    }
-    
-    private val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
-    private val executor: ExecutorService = Executors.newSingleThreadExecutor()
-    private var isVirtualCameraActive = false
-    
-    /**
-     * Register a virtual camera device with the system
-     * This makes the virtual camera available to other apps
-     */
-    fun registerVirtualCamera(): Boolean {
-        return try {
-            Log.d(TAG, "Registering virtual camera device...")
+        
+        /**
+         * Handle camera intent from external apps
+         * This method is called when other apps request camera access
+         */
+        fun handleCameraIntent(context: Context, intent: Intent): Intent? {
+            Log.d(TAG, "Handling camera intent: ${intent.action}")
             
-            // Create virtual camera characteristics
-            val characteristics = createVirtualCameraCharacteristics()
+            // Initialize VideoPathManager
+            VideoPathManager.initialize(context)
             
-            // Register with camera manager (simplified approach)
-            // In a real implementation, this would require system-level changes
-            isVirtualCameraActive = true
+            // Get the current video path
+            val videoPath = VideoPathManager.getCurrentVideoPath()
             
-            Log.d(TAG, "Virtual camera registered successfully")
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to register virtual camera: ${e.message}")
-            false
+            if (videoPath == null) {
+                Log.w(TAG, "No video path available, using test pattern")
+            } else {
+                Log.d(TAG, "Using video path: $videoPath")
+            }
+            
+            // Create intent to launch VirtualCameraActivity
+            return Intent(context, VirtualCameraActivity::class.java).apply {
+                // Copy the original intent action
+                action = intent.action
+                
+                // Add video path
+                putExtra(VirtualCameraActivity.EXTRA_VIDEO_PATH, videoPath)
+                putExtra(VirtualCameraActivity.EXTRA_IS_VIRTUAL_CAMERA, true)
+                
+                // Copy any data from original intent
+                if (intent.data != null) {
+                    data = intent.data
+                }
+                
+                // Copy extras
+                intent.extras?.let { extras ->
+                    putExtras(extras)
+                }
+                
+                // Set flags for proper launching
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                
+                Log.d(TAG, "Created virtual camera intent with video: $videoPath")
+            }
         }
-    }
-    
-    /**
-     * Unregister the virtual camera device
-     */
-    fun unregisterVirtualCamera(): Boolean {
-        return try {
-            Log.d(TAG, "Unregistering virtual camera device...")
-            isVirtualCameraActive = false
-            Log.d(TAG, "Virtual camera unregistered successfully")
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to unregister virtual camera: ${e.message}")
-            false
+        
+        /**
+         * Check if virtual camera is available
+         */
+        fun isVirtualCameraAvailable(context: Context): Boolean {
+            VideoPathManager.initialize(context)
+            return VideoPathManager.hasVideoPath()
         }
-    }
-    
-    /**
-     * Check if virtual camera is currently active
-     */
-    fun isVirtualCameraActive(): Boolean = isVirtualCameraActive
-    
-    /**
-     * Create virtual camera characteristics
-     */
-    private fun createVirtualCameraCharacteristics(): CameraCharacteristics? {
-        // This is a simplified implementation
-        // In reality, you would need to create a proper CameraCharacteristics object
-        // with all the required camera properties
-        // For now, return null as this is complex to implement without system-level access
-        return null
-    }
-    
-    /**
-     * Get available virtual camera devices
-     */
-    fun getAvailableVirtualCameras(): List<String> {
-        return if (isVirtualCameraActive) {
-            listOf(VIRTUAL_CAMERA_ID)
-        } else {
-            emptyList()
-        }
-    }
-    
-    /**
-     * Start providing video frames to the virtual camera
-     */
-    fun startVideoStream(videoPath: String): Boolean {
-        return try {
-            Log.d(TAG, "Starting video stream: $videoPath")
-            // Implementation would start streaming video frames
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to start video stream: ${e.message}")
-            false
-        }
-    }
-    
-    /**
-     * Stop providing video frames
-     */
-    fun stopVideoStream(): Boolean {
-        return try {
-            Log.d(TAG, "Stopping video stream")
-            // Implementation would stop streaming video frames
-            true
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to stop video stream: ${e.message}")
-            false
+        
+        /**
+         * Get available camera modes
+         */
+        fun getAvailableCameraModes(): List<String> {
+            return listOf(
+                "photo",      // IMAGE_CAPTURE
+                "video",      // VIDEO_CAPTURE
+                "camera"      // General camera access
+            )
         }
     }
 }

@@ -8,6 +8,15 @@
     <uses-feature
         android:name="android.hardware.camera.autofocus"
         android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="true" />
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -68,15 +77,50 @@
             android:exported="true"
             android:label="Virtual Camera"
             android:theme="@style/Theme.VirtualCamera"
-            android:screenOrientation="portrait">
-            <intent-filter>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop">
+            
+            <!-- Image capture intent -->
+            <intent-filter android:priority="1000">
                 <action android:name="android.media.action.IMAGE_CAPTURE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+            
+            <!-- Video capture intent -->
+            <intent-filter android:priority="1000">
+                <action android:name="android.media.action.VIDEO_CAPTURE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="video/*" />
+            </intent-filter>
+            
+            <!-- Camera intent for general camera access -->
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.CAMERA_BUTTON" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             
-            <intent-filter>
-                <action android:name="android.media.action.VIDEO_CAPTURE" />
+            <!-- Additional camera intents for better compatibility -->
+            <intent-filter android:priority="1000">
+                <action android:name="android.media.action.IMAGE_CAPTURE_SECURE" />
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            
+            <intent-filter android:priority="1000">
+                <action android:name="android.media.action.VIDEO_CAPTURE_SECURE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            
+            <!-- Camera app intent -->
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.CAMERA" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            
+            <!-- Main launcher intent -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
             
@@ -115,6 +159,61 @@
             android:enabled="true"
             android:exported="false"
             android:process=":videofeed" />
+            
+        <!-- Camera Provider Service -->
+        <service
+            android:name=".service.CameraProviderService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":cameraprovider">
+            <intent-filter android:priority="1000">
+                <action android:name="android.media.action.IMAGE_CAPTURE" />
+                <action android:name="android.media.action.VIDEO_CAPTURE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+        
+        <!-- Virtual Camera Provider Service -->
+        <service
+            android:name=".camera.VirtualCameraProviderService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":cameraprovider">
+            <intent-filter>
+                <action android:name="android.hardware.camera.provider" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+        
+        <!-- System Camera Service -->
+        <service
+            android:name=".service.SystemCameraService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":systemcamera">
+            <intent-filter android:priority="1000">
+                <action android:name="android.media.action.IMAGE_CAPTURE" />
+                <action android:name="android.media.action.VIDEO_CAPTURE" />
+                <action android:name="android.media.action.IMAGE_CAPTURE_SECURE" />
+                <action android:name="android.media.action.VIDEO_CAPTURE_SECURE" />
+                <action android:name="android.intent.action.CAMERA" />
+                <action android:name="android.intent.action.CAMERA_BUTTON" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+        
+        <!-- Camera Intent Receiver -->
+        <receiver
+            android:name=".receiver.CameraIntentReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.CAMERA_BUTTON" />
+                <action android:name="android.media.action.IMAGE_CAPTURE" />
+                <action android:name="android.media.action.VIDEO_CAPTURE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
         </application>
 
 </manifest>

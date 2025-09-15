@@ -1,16 +1,15 @@
 package com.app001.virtualcamera
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,15 +19,13 @@ import com.app001.virtualcamera.screens.AdvancedSetupScreen
 import com.app001.virtualcamera.screens.HomeScreen
 import com.app001.virtualcamera.screens.PreviewScreen
 import com.app001.virtualcamera.screens.SettingsScreen
-import com.app001.virtualcamera.test.CameraTestActivity
 import com.app001.virtualcamera.ui.theme.VirtualCameraTheme
-import java.io.File
+import com.app001.virtualcamera.utils.VideoPathManager
 
 class MainActivity : ComponentActivity() {
     private val videoPickerLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri ->
-        // This will be handled by the PreviewScreen
         _selectedVideoUri.value = uri
     }
 
@@ -36,6 +33,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        VideoPathManager.initialize(this)
 
         setContent {
             VirtualCameraTheme {
@@ -47,9 +46,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+
+
     @Composable
     fun MainScreen(
-        videoPickerLauncher: androidx.activity.result.ActivityResultLauncher<String>,
+        videoPickerLauncher: ActivityResultLauncher<String>,
         selectedVideoUri: Uri?
     ) {
         val navController = rememberNavController()
@@ -74,22 +75,24 @@ class MainActivity : ComponentActivity() {
                         }
                     )
                 }
-                
-                       composable(Screen.Preview.route) {
-                           PreviewScreen(
-                               videoPickerLauncher = videoPickerLauncher,
-                               selectedVideoUri = selectedVideoUri
-                           )
-                       }
-                       
-                composable(Screen.Advanced.route) {
-                    AdvancedSetupScreen(selectedVideoPath = null) // For now, pass null
+
+                composable(Screen.Preview.route) {
+                    PreviewScreen(
+                        videoPickerLauncher = videoPickerLauncher,
+                        selectedVideoUri = selectedVideoUri
+                    )
                 }
-                       
-                       composable(Screen.Settings.route) {
-                           SettingsScreen()
-                       }
+
+                composable(Screen.Advanced.route) {
+                    AdvancedSetupScreen(selectedVideoUri = selectedVideoUri)
+                }
+
+                composable(Screen.Settings.route) {
+                    SettingsScreen()
+                }
             }
         }
     }
+
 }
+

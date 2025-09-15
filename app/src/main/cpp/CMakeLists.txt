@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22.1)
+﻿cmake_minimum_required(VERSION 3.22.1)
 
 # Set the project name
 project("virtualcamera")
@@ -12,7 +12,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Add system camera hook library (main virtual camera functionality)
 add_library(system_camera_hook SHARED
         system_camera_hook.cpp
-        video_processor.cpp
         plt_hook.cpp
 )
 

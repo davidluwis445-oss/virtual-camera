@@ -23,20 +23,45 @@ import com.app001.virtualcamera.system.SystemVirtualCamera
 import kotlinx.coroutines.delay
 import android.Manifest
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.util.Log
+import java.io.File
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 
 @Composable
 fun AdvancedSetupScreen(
-    selectedVideoPath: String? = null
+    selectedVideoUri: Uri? = null
 ) {
     val context = LocalContext.current
+    
+    // Convert URI to file path
+    val selectedVideoPath = remember(selectedVideoUri) {
+        selectedVideoUri?.let { uri ->
+            try {
+                val inputStream = context.contentResolver.openInputStream(uri)
+                val file = File(context.cacheDir, "selected_video.mp4")
+                inputStream?.use { input ->
+                    file.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                file.absolutePath
+            } catch (e: Exception) {
+                Log.e("AdvancedSetup", "Error copying video file: ${e.message}")
+                null
+            }
+        }
+    }
+    
     var isV4L2Available by remember { mutableStateOf(false) }
     var isSystemAppInstalled by remember { mutableStateOf(false) }
     var isDefaultCameraDisabled by remember { mutableStateOf(false) }
     var isV4L2Setup by remember { mutableStateOf(false) }
+    var isDefaultCameraApp by remember { mutableStateOf(false) }
     var availableVideoDevices by remember { mutableStateOf<List<String>>(emptyList()) }
     var isProcessing by remember { mutableStateOf(false) }
+    var isFrontCamera by remember { mutableStateOf(true) } // Default to front camera (selfie mode)
     
     // Initialize SystemVirtualCamera
     val systemVirtualCamera = remember { SystemVirtualCamera(context as android.app.Activity) }
@@ -81,6 +106,12 @@ fun AdvancedSetupScreen(
                 isV4L2Available = true // Allow setup to proceed
                 availableVideoDevices = listOf("/dev/video0", "/dev/video1", "/dev/video2") // Simulate devices
             }
+            
+            // Check if this app is the default camera app
+            isDefaultCameraApp = systemVirtualCamera.isDefaultCameraApp()
+            
+            // Get current camera mode
+            isFrontCamera = systemVirtualCamera.getCameraMode()
         } catch (e: Exception) {
             Toast.makeText(context, "Error checking system status: ${e.message}", Toast.LENGTH_SHORT).show()
         } finally {
@@ -118,6 +149,38 @@ fun AdvancedSetupScreen(
                     color = Color(0xFF666666),
                     textAlign = TextAlign.Start
                 )
+                
+                // Video selection status
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (selectedVideoPath != null) Color(0xFFE8F5E8) else Color(0xFFFFF3E0)
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = if (selectedVideoPath != null) Icons.Default.CheckCircle else Icons.Default.Warning,
+                            contentDescription = null,
+                            tint = if (selectedVideoPath != null) Color(0xFF4CAF50) else Color(0xFFFF9800),
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = if (selectedVideoPath != null) {
+                                "Video selected: ${selectedVideoPath.substringAfterLast("/")}"
+                            } else {
+                                "No video selected - will use test pattern"
+                            },
+                            fontSize = 14.sp,
+                            color = if (selectedVideoPath != null) Color(0xFF2E7D32) else Color(0xFFE65100)
+                        )
+                    }
+                }
             }
             
             // Refresh button
@@ -285,8 +348,204 @@ fun AdvancedSetupScreen(
             isV4L2Setup = isV4L2Setup,
             isSystemAppInstalled = isSystemAppInstalled,
             isDefaultCameraDisabled = isDefaultCameraDisabled,
+            isDefaultCameraApp = isDefaultCameraApp,
             videoDevices = availableVideoDevices
         )
+        
+        // Camera Mode Selection
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFFF3E5F5)
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.CameraAlt,
+                        contentDescription = null,
+                        tint = Color(0xFF9C27B0),
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Camera Mode Selection",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF7B1FA2)
+                    )
+                }
+                
+                Text(
+                    text = "Choose between front camera (selfie) or back camera mode for the virtual camera.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color(0xFF6A1B9A)
+                )
+                
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            isFrontCamera = true
+                            systemVirtualCamera.setCameraMode(true)
+                            Toast.makeText(context, "📱 Set to Front Camera (Selfie Mode)", Toast.LENGTH_SHORT).show()
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isFrontCamera) Color(0xFF9C27B0) else Color(0xFFE1BEE7)
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Face,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Front Camera (Selfie)")
+                    }
+                    
+                    Button(
+                        onClick = {
+                            isFrontCamera = false
+                            systemVirtualCamera.setCameraMode(false)
+                            Toast.makeText(context, "📷 Set to Back Camera", Toast.LENGTH_SHORT).show()
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (!isFrontCamera) Color(0xFF9C27B0) else Color(0xFFE1BEE7)
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Camera,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Back Camera")
+                    }
+                }
+                
+                Text(
+                    text = "Current Mode: ${if (isFrontCamera) "Front Camera (Selfie)" else "Back Camera"}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF6A1B9A),
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+        
+        // Default Camera App Setup
+        if (!isDefaultCameraApp) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFFFF3E0)
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = null,
+                            tint = Color(0xFFFF9800),
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Set as Default Camera App",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFFE65100)
+                        )
+                    }
+                    
+                    Text(
+                        text = "To make third-party apps (TikTok, Telegram, etc.) use your virtual camera, set this app as the default camera app.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color(0xFFBF360C)
+                    )
+                    
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                val success = systemVirtualCamera.setAsDefaultCameraApp()
+                                if (success) {
+                                    Toast.makeText(context, "📱 Opening settings to set as default camera app", Toast.LENGTH_LONG).show()
+                                } else {
+                                    Toast.makeText(context, "❌ Failed to open settings", Toast.LENGTH_SHORT).show()
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFFF9800)
+                            )
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Set as Default")
+                        }
+                        
+                        Button(
+                            onClick = {
+                                val success = systemVirtualCamera.forceLaunchVirtualCamera()
+                                if (success) {
+                                    Toast.makeText(context, "🎥 Testing virtual camera launch", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(context, "❌ Failed to launch virtual camera", Toast.LENGTH_SHORT).show()
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF4CAF50)
+                            )
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.PlayArrow,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Test Launch")
+                        }
+                        
+                        Button(
+                            onClick = {
+                                val success = systemVirtualCamera.startSystemWideCameraService(selectedVideoPath ?: "")
+                                if (success) {
+                                    Toast.makeText(context, "🌐 System-wide camera service started", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(context, "❌ Failed to start system-wide camera", Toast.LENGTH_SHORT).show()
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF2196F3)
+                            )
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Public,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("System-Wide")
+                        }
+                    }
+                }
+            }
+        }
         
         // Virtual Camera Control
         Card(
@@ -320,13 +579,16 @@ fun AdvancedSetupScreen(
                                 val videoPath = selectedVideoPath ?: ""
                                 
                                 if (videoPath.isNotEmpty()) {
-                                    Toast.makeText(context, "🎥 Using selected video: ${videoPath.substringAfterLast("/")}", Toast.LENGTH_SHORT).show()
+                                    val fileName = videoPath.substringAfterLast("/")
+                                    Toast.makeText(context, "🎥 Using selected video: $fileName", Toast.LENGTH_SHORT).show()
+                                    Log.d("AdvancedSetup", "Video path: $videoPath")
                                 } else {
-                                    Toast.makeText(context, "🎥 Using test pattern (no video selected)", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "⚠️ No video selected - using test pattern", Toast.LENGTH_SHORT).show()
+                                    Log.d("AdvancedSetup", "No video path provided")
                                 }
                                 
-                                // Start virtual camera with selected video
-                                val success = systemVirtualCamera.startVirtualCameraService(videoPath)
+                                // Start system-wide camera service with selected video
+                                val success = systemVirtualCamera.startSystemWideCameraService(videoPath)
                                 
                                 if (success) {
                                     Toast.makeText(context, "✅ Virtual camera started! Other apps will now see your video feed.", Toast.LENGTH_LONG).show()
@@ -354,7 +616,13 @@ fun AdvancedSetupScreen(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text("Start Virtual Camera")
+                        Text(
+                            if (selectedVideoPath != null) {
+                                "Start Virtual Camera with Video"
+                            } else {
+                                "Start Virtual Camera (Test Pattern)"
+                            }
+                        )
                     }
                     
                     Button(
@@ -639,6 +907,7 @@ private fun StatusSummaryCard(
     isV4L2Setup: Boolean,
     isSystemAppInstalled: Boolean,
     isDefaultCameraDisabled: Boolean,
+    isDefaultCameraApp: Boolean,
     videoDevices: List<String>
 ) {
     
@@ -677,6 +946,11 @@ private fun StatusSummaryCard(
             StatusItem(
                 label = "Default Camera Disabled",
                 status = isDefaultCameraDisabled
+            )
+            
+            StatusItem(
+                label = "Default Camera App",
+                status = isDefaultCameraApp
             )
             
             if (videoDevices.isNotEmpty()) {
