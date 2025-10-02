@@ -1,0 +1,45 @@
+{
+  "buildFiles": [
+    "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\src\\main\\cpp\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Users\\Windows 10 Pro\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\.cxx\\RelWithDebInfo\\3p6p6r5c\\x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Users\\Windows 10 Pro\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\.cxx\\RelWithDebInfo\\3p6p6r5c\\x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "simple_camera_replacement::@6890427a1f51a3e7e1df": {
+      "artifactName": "simple_camera_replacement",
+      "abi": "x86",
+      "output": "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\build\\intermediates\\cxx\\RelWithDebInfo\\3p6p6r5c\\obj\\x86\\libsimple_camera_replacement.so",
+      "runtimeFiles": []
+    },
+    "improved_real_camera_hook::@6890427a1f51a3e7e1df": {
+      "artifactName": "improved_real_camera_hook",
+      "abi": "x86",
+      "output": "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\build\\intermediates\\cxx\\RelWithDebInfo\\3p6p6r5c\\obj\\x86\\libimproved_real_camera_hook.so",
+      "runtimeFiles": []
+    },
+    "system_wide_camera_hook::@6890427a1f51a3e7e1df": {
+      "artifactName": "system_wide_camera_hook",
+      "abi": "x86",
+      "output": "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\build\\intermediates\\cxx\\RelWithDebInfo\\3p6p6r5c\\obj\\x86\\libsystem_wide_camera_hook.so",
+      "runtimeFiles": []
+    },
+    "real_camera_hook::@6890427a1f51a3e7e1df": {
+      "artifactName": "real_camera_hook",
+      "abi": "x86",
+      "output": "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\build\\intermediates\\cxx\\RelWithDebInfo\\3p6p6r5c\\obj\\x86\\libreal_camera_hook.so",
+      "runtimeFiles": []
+    }
+  }
+}

@@ -1,0 +1,27 @@
+[
+{
+  "directory": "C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/.cxx/RelWithDebInfo/3p6p6r5c/x86_64",
+  "command": "C:\\Users\\WINDOW~1\\AppData\\Local\\Android\\Sdk\\ndk\\270~1.120\\TOOLCH~1\\llvm\\prebuilt\\WINDOW~1\\bin\\CLANG_~1.EXE --target=x86_64-none-linux-android24 --sysroot=\"C:/Users/Windows 10 Pro/AppData/Local/Android/Sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/windows-x86_64/sysroot\" -Dsimple_camera_replacement_EXPORTS -I\"C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/src/main/cpp/src/main/cpp\" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++17 -O2 -g -DNDEBUG -fPIC -std=c++17 -o CMakeFiles\\simple_camera_replacement.dir\\simple_camera_replacement.cpp.o -c \"C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\src\\main\\cpp\\simple_camera_replacement.cpp\"",
+  "file": "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\src\\main\\cpp\\simple_camera_replacement.cpp"
+},
+{
+  "directory": "C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/.cxx/RelWithDebInfo/3p6p6r5c/x86_64",
+  "command": "C:\\Users\\WINDOW~1\\AppData\\Local\\Android\\Sdk\\ndk\\270~1.120\\TOOLCH~1\\llvm\\prebuilt\\WINDOW~1\\bin\\CLANG_~1.EXE --target=x86_64-none-linux-android24 --sysroot=\"C:/Users/Windows 10 Pro/AppData/Local/Android/Sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/windows-x86_64/sysroot\" -Dreal_camera_hook_EXPORTS -I\"C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/src/main/cpp/src/main/cpp\" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++17 -O2 -g -DNDEBUG -fPIC -std=c++17 -o CMakeFiles\\real_camera_hook.dir\\real_camera_hook.cpp.o -c \"C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\src\\main\\cpp\\real_camera_hook.cpp\"",
+  "file": "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\src\\main\\cpp\\real_camera_hook.cpp"
+},
+{
+  "directory": "C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/.cxx/RelWithDebInfo/3p6p6r5c/x86_64",
+  "command": "C:\\Users\\WINDOW~1\\AppData\\Local\\Android\\Sdk\\ndk\\270~1.120\\TOOLCH~1\\llvm\\prebuilt\\WINDOW~1\\bin\\CLANG_~1.EXE --target=x86_64-none-linux-android24 --sysroot=\"C:/Users/Windows 10 Pro/AppData/Local/Android/Sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/windows-x86_64/sysroot\" -Dimproved_real_camera_hook_EXPORTS -I\"C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/src/main/cpp/src/main/cpp\" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++17 -O2 -g -DNDEBUG -fPIC -std=c++17 -o CMakeFiles\\improved_real_camera_hook.dir\\improved_real_camera_hook.cpp.o -c \"C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\src\\main\\cpp\\improved_real_camera_hook.cpp\"",
+  "file": "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\src\\main\\cpp\\improved_real_camera_hook.cpp"
+},
+{
+  "directory": "C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/.cxx/RelWithDebInfo/3p6p6r5c/x86_64",
+  "command": "C:\\Users\\WINDOW~1\\AppData\\Local\\Android\\Sdk\\ndk\\270~1.120\\TOOLCH~1\\llvm\\prebuilt\\WINDOW~1\\bin\\CLANG_~1.EXE --target=x86_64-none-linux-android24 --sysroot=\"C:/Users/Windows 10 Pro/AppData/Local/Android/Sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/windows-x86_64/sysroot\" -Dimproved_real_camera_hook_EXPORTS -I\"C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/src/main/cpp/src/main/cpp\" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++17 -O2 -g -DNDEBUG -fPIC -std=c++17 -o CMakeFiles\\improved_real_camera_hook.dir\\plt_hook.cpp.o -c \"C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\src\\main\\cpp\\plt_hook.cpp\"",
+  "file": "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\src\\main\\cpp\\plt_hook.cpp"
+},
+{
+  "directory": "C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/.cxx/RelWithDebInfo/3p6p6r5c/x86_64",
+  "command": "C:\\Users\\WINDOW~1\\AppData\\Local\\Android\\Sdk\\ndk\\270~1.120\\TOOLCH~1\\llvm\\prebuilt\\WINDOW~1\\bin\\CLANG_~1.EXE --target=x86_64-none-linux-android24 --sysroot=\"C:/Users/Windows 10 Pro/AppData/Local/Android/Sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/windows-x86_64/sysroot\" -Dsystem_wide_camera_hook_EXPORTS -I\"C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/src/main/cpp/src/main/cpp\" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++17 -O2 -g -DNDEBUG -fPIC -std=c++17 -o CMakeFiles\\system_wide_camera_hook.dir\\SystemWideCameraHook.cpp.o -c \"C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\src\\main\\cpp\\SystemWideCameraHook.cpp\"",
+  "file": "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\src\\main\\cpp\\SystemWideCameraHook.cpp"
+}
+]

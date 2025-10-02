@@ -1,0 +1,41 @@
+# ninja log v5
+87	1095	7797956421700504	CMakeFiles/system_camera_hook.dir/plt_hook.cpp.o	f9517c73c763d070
+5	1632	7797937757859377	CMakeFiles/system_camera_hook.dir/system_camera_hook.cpp.o	76a80a2cd9321d47
+1965	2399	7798747770144962	C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/build/intermediates/cxx/RelWithDebInfo/3p6p6r5c/obj/armeabi-v7a/libcamera_surface_video_injection.so	55d4f53e99c4baa5
+294	2072	7797937762330606	CMakeFiles/system_camera_hook.dir/aggressive_camera_hook.cpp.o	37ded23e5ca56e7e
+1	181	7808503273936893	build.ninja	f119b87a0b274790
+6	582	7800420453597970	C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/build/intermediates/cxx/RelWithDebInfo/3p6p6r5c/obj/armeabi-v7a/libsimple_camera_replacement.so	616ebf2912ad7fee
+2060	2485	7797956436030474	C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/build/intermediates/cxx/RelWithDebInfo/3p6p6r5c/obj/armeabi-v7a/libsystem_camera_hook.so	b0393df836529cec
+434	2288	7797937764521743	CMakeFiles/system_camera_hook.dir/virtual_camera_hack.cpp.o	ceb61cfbd43dbbf2
+65	1726	7797937758826948	CMakeFiles/system_camera_hook.dir/comprehensive_camera_hook.cpp.o	89b4f6f1b596f4ea
+0	21	0	clean	4876c4aea7bfcc76
+91	1763	7797937759206943	CMakeFiles/system_camera_hook.dir/camera_preview_hook.cpp.o	acecdbe3277ce285
+37	1765	7797937759216961	CMakeFiles/system_camera_hook.dir/system_wide_camera_hook.cpp.o	777fa0c9152c7d7b
+245	1943	7797937761037410	CMakeFiles/system_camera_hook.dir/system_camera_service_hook.cpp.o	b8c20da2b13b4c7
+199	2071	7797937762320630	CMakeFiles/system_camera_hook.dir/advanced_system_camera_hook.cpp.o	b34d46834feb0f63
+4	2059	7797956430730493	CMakeFiles/system_camera_hook.dir/working_virtual_camera.cpp.o	33ec9de7ff75ca81
+1638	1953	7804065239670179	C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/build/intermediates/cxx/RelWithDebInfo/3p6p6r5c/obj/armeabi-v7a/libimproved_real_camera_hook.so	e75a893d86bf848a
+6	1379	7799589689898760	CMakeFiles/simple_camera_replacement.dir/simple_camera_replacement.cpp.o	1681e9a1172a1b05
+42	1228	7799589688818785	CMakeFiles/real_camera_hook.dir/real_camera_hook.cpp.o	d03a786456086a1f
+1228	1509	7799589691647463	C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/build/intermediates/cxx/RelWithDebInfo/3p6p6r5c/obj/armeabi-v7a/libreal_camera_hook.so	88d604b8749dbb
+7	1109	7800516422923050	CMakeFiles/system_wide_camera_hook.dir/SystemWideCameraHook.cpp.o	dc2ddf6d47bc20a9
+1110	1413	7800516425966902	C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/build/intermediates/cxx/RelWithDebInfo/3p6p6r5c/obj/armeabi-v7a/libsystem_wide_camera_hook.so	76caa321c490d2ba
+4	1835	7798747764485013	CMakeFiles/video_to_camera_replacement.dir/VideoToCameraReplacement.cpp.o	cd4dc8db16358f8a
+1835	2238	7798747768354982	C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/build/intermediates/cxx/RelWithDebInfo/3p6p6r5c/obj/armeabi-v7a/libvideo_to_camera_replacement.so	e053a2035f5556b6
+28	1965	7798747765764981	CMakeFiles/camera_surface_video_injection.dir/CameraSurfaceVideoInjection.cpp.o	a7d589082c692919
+122	954	7799589686098775	CMakeFiles/system_wide_camera_hook.dir/plt_hook.cpp.o	f66bf74bfc984f97
+5	908	7804065229173485	CMakeFiles/improved_real_camera_hook.dir/plt_hook.cpp.o	ce88aa0891df6837
+48	1638	7804065236466868	CMakeFiles/improved_real_camera_hook.dir/improved_real_camera_hook.cpp.o	446d6c5b66235507
+75	608	7808503280698550	CMakeFiles/improved_real_camera_hook.dir/plt_hook.cpp.o	ce88aa0891df6837
+47	926	7808503283868547	CMakeFiles/real_camera_hook.dir/real_camera_hook.cpp.o	d03a786456086a1f
+4	1055	7808503285138548	CMakeFiles/simple_camera_replacement.dir/simple_camera_replacement.cpp.o	1681e9a1172a1b05
+111	1216	7808503286668545	CMakeFiles/improved_real_camera_hook.dir/improved_real_camera_hook.cpp.o	446d6c5b66235507
+927	1275	7808503287278543	C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/build/intermediates/cxx/RelWithDebInfo/3p6p6r5c/obj/armeabi-v7a/libreal_camera_hook.so	88d604b8749dbb
+1056	1393	7808503288528555	C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/build/intermediates/cxx/RelWithDebInfo/3p6p6r5c/obj/armeabi-v7a/libsimple_camera_replacement.so	616ebf2912ad7fee
+1217	1531	7808503289938557	C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/build/intermediates/cxx/RelWithDebInfo/3p6p6r5c/obj/armeabi-v7a/libimproved_real_camera_hook.so	e75a893d86bf848a
+163	1543	7808503290018578	CMakeFiles/system_wide_camera_hook.dir/SystemWideCameraHook.cpp.o	dc2ddf6d47bc20a9
+1543	1831	7808503292956304	C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/build/intermediates/cxx/RelWithDebInfo/3p6p6r5c/obj/armeabi-v7a/libsystem_wide_camera_hook.so	76caa321c490d2ba
+6	1267	7808506566911483	CMakeFiles/system_wide_camera_hook.dir/SystemWideCameraHook.cpp.o	dc2ddf6d47bc20a9
+1267	1546	7808506569751975	C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/build/intermediates/cxx/RelWithDebInfo/3p6p6r5c/obj/armeabi-v7a/libsystem_wide_camera_hook.so	76caa321c490d2ba
+3	1084	7808510622999680	CMakeFiles/system_wide_camera_hook.dir/SystemWideCameraHook.cpp.o	dc2ddf6d47bc20a9
+1085	1354	7808510625818425	C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/build/intermediates/cxx/RelWithDebInfo/3p6p6r5c/obj/armeabi-v7a/libsystem_wide_camera_hook.so	76caa321c490d2ba

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000">
+
+    <!-- Status Text -->
+    <TextView
+        android:id="@+id/simple_status_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🎥 Simple Virtual Camera"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:padding="16dp"
+        android:gravity="center"
+        android:background="#AA000000" />
+
+    <!-- Camera Preview Surface -->
+    <SurfaceView
+        android:id="@+id/simple_surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#000000" />
+
+    <!-- Simple Controls -->
+    <LinearLayout
+        android:id="@+id/simple_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:background="#DD000000">
+
+        <!-- Capture Button -->
+        <Button
+            android:id="@+id/simple_capture_button"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="📸 CAPTURE PHOTO"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#4CAF50"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Instructions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="✅ Your video is now the system camera!\n🎯 All apps (TikTok, Instagram, etc.) will see your video instead of real camera.\n📸 Tap anywhere to capture photo."
+            android:textColor="#CCFFFFFF"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

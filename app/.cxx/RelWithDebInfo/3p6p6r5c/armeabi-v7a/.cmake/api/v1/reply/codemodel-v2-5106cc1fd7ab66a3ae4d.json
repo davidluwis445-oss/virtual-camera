@@ -1,0 +1,87 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-RelWithDebInfo-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.6.0"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "RelWithDebInfo",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "virtualcamera",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "improved_real_camera_hook::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-improved_real_camera_hook-RelWithDebInfo-3eb2358d8999eb991765.json",
+					"name" : "improved_real_camera_hook",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "real_camera_hook::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-real_camera_hook-RelWithDebInfo-5a157f62cf4661c8871d.json",
+					"name" : "real_camera_hook",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "simple_camera_replacement::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-simple_camera_replacement-RelWithDebInfo-c910e594e4542ded49e9.json",
+					"name" : "simple_camera_replacement",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "system_wide_camera_hook::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-system_wide_camera_hook-RelWithDebInfo-2dfd8605e421122ba138.json",
+					"name" : "system_wide_camera_hook",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/.cxx/RelWithDebInfo/3p6p6r5c/armeabi-v7a",
+		"source" : "C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/src/main/cpp"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

@@ -1,0 +1,6 @@
+C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/.cxx/RelWithDebInfo/3p6p6r5c/x86_64/CMakeFiles/simple_camera_replacement.dir
+C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/.cxx/RelWithDebInfo/3p6p6r5c/x86_64/CMakeFiles/real_camera_hook.dir
+C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/.cxx/RelWithDebInfo/3p6p6r5c/x86_64/CMakeFiles/improved_real_camera_hook.dir
+C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/.cxx/RelWithDebInfo/3p6p6r5c/x86_64/CMakeFiles/system_wide_camera_hook.dir
+C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/.cxx/RelWithDebInfo/3p6p6r5c/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/Windows 10 Pro/Desktop/VC/VirtualCamera/app/.cxx/RelWithDebInfo/3p6p6r5c/x86_64/CMakeFiles/rebuild_cache.dir

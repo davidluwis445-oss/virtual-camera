@@ -1,0 +1,59 @@
+{
+  "buildFiles": [
+    "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\src\\main\\cpp\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Users\\Windows 10 Pro\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\.cxx\\Debug\\5w6f3n3t\\x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Users\\Windows 10 Pro\\AppData\\Local\\Android\\Sdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\.cxx\\Debug\\5w6f3n3t\\x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "improved_real_camera_hook::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "x86_64",
+      "artifactName": "improved_real_camera_hook",
+      "output": "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\build\\intermediates\\cxx\\Debug\\5w6f3n3t\\obj\\x86_64\\libimproved_real_camera_hook.so",
+      "runtimeFiles": []
+    },
+    "real_camera_hook::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "x86_64",
+      "artifactName": "real_camera_hook",
+      "output": "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\build\\intermediates\\cxx\\Debug\\5w6f3n3t\\obj\\x86_64\\libreal_camera_hook.so",
+      "runtimeFiles": []
+    },
+    "simple_camera_replacement::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "x86_64",
+      "artifactName": "simple_camera_replacement",
+      "output": "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\build\\intermediates\\cxx\\Debug\\5w6f3n3t\\obj\\x86_64\\libsimple_camera_replacement.so",
+      "runtimeFiles": []
+    },
+    "system_wide_camera_hook::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "x86_64",
+      "artifactName": "system_wide_camera_hook",
+      "output": "C:\\Users\\Windows 10 Pro\\Desktop\\VC\\VirtualCamera\\app\\build\\intermediates\\cxx\\Debug\\5w6f3n3t\\obj\\x86_64\\libsystem_wide_camera_hook.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "C:\\Users\\Windows 10 Pro\\AppData\\Local\\Android\\Sdk\\ndk\\27.0.12077973\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang.exe",
+      "cppCompilerExecutable": "C:\\Users\\Windows 10 Pro\\AppData\\Local\\Android\\Sdk\\ndk\\27.0.12077973\\toolchains\\llvm\\prebuilt\\windows-x86_64\\bin\\clang++.exe"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}
