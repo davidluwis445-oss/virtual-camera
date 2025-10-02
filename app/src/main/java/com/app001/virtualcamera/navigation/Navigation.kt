@@ -32,6 +32,18 @@ sealed class Screen(
         title = "Settings",
         icon = Icons.Default.Settings
     )
+    
+    object VirtualCameraHack : Screen(
+        route = "virtual_camera_hack",
+        title = "Virtual Camera Hack",
+        icon = Icons.Default.Security
+    )
+    
+    object GhostCam : Screen(
+        route = "ghostcam",
+        title = "GhostCam Style",
+        icon = Icons.Default.Videocam
+    )
 }
 
 val bottomNavItems = listOf(

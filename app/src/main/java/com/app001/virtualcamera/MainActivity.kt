@@ -19,6 +19,8 @@ import com.app001.virtualcamera.screens.AdvancedSetupScreen
 import com.app001.virtualcamera.screens.HomeScreen
 import com.app001.virtualcamera.screens.PreviewScreen
 import com.app001.virtualcamera.screens.SettingsScreen
+import com.app001.virtualcamera.screens.VirtualCameraHackScreen
+import com.app001.virtualcamera.screens.GhostCamScreen
 import com.app001.virtualcamera.ui.theme.VirtualCameraTheme
 import com.app001.virtualcamera.utils.VideoPathManager
 
@@ -35,6 +37,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         VideoPathManager.initialize(this)
+        
 
         setContent {
             VirtualCameraTheme {
@@ -66,14 +69,7 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.padding(paddingValues)
             ) {
                 composable(Screen.Home.route) {
-                    HomeScreen(
-                        onNavigateToPreview = {
-                            navController.navigate(Screen.Preview.route)
-                        },
-                        onNavigateToSettings = {
-                            navController.navigate(Screen.Settings.route)
-                        }
-                    )
+                    HomeScreen()
                 }
 
                 composable(Screen.Preview.route) {
@@ -89,6 +85,22 @@ class MainActivity : ComponentActivity() {
 
                 composable(Screen.Settings.route) {
                     SettingsScreen()
+                }
+                
+                composable(Screen.VirtualCameraHack.route) {
+                    VirtualCameraHackScreen(
+                        onNavigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+                
+                composable(Screen.GhostCam.route) {
+                    GhostCamScreen(
+                        onNavigateBack = {
+                            navController.popBackStack()
+                        }
+                    )
                 }
             }
         }

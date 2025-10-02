@@ -8,8 +8,8 @@ import android.util.Log
 import com.app001.virtualcamera.utils.VideoPathManager
 
 /**
- * Camera Intent Handler that manages camera app selection
- * This ensures our virtual camera is used by third-party apps
+ * Camera Intent Handler that manages preview replacement
+ * This ensures our video replaces camera preview while keeping camera functionality
  */
 object CameraIntentHandler {
     private const val TAG = "CameraIntentHandler"
@@ -52,53 +52,38 @@ object CameraIntentHandler {
     }
     
     /**
-     * Set our app as the preferred camera app
+     * Enable preview replacement mode
+     * This allows our video to replace camera preview without disabling camera functionality
      */
-    fun setAsPreferredCameraApp(context: Context): Boolean {
+    fun enablePreviewReplacement(context: Context): Boolean {
         return try {
-            Log.d(TAG, "Setting as preferred camera app")
+            Log.d(TAG, "Enabling preview replacement mode")
             
-            // Create camera intent
-            val cameraIntent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+            // Initialize VideoPathManager
+            VideoPathManager.initialize(context)
             
-            // Get all camera apps
-            val cameraApps = getCameraApps(context, cameraIntent)
-            
-            // Check if our app is in the list
-            val ourApp = cameraApps.find { 
-                it.activityInfo.packageName == context.packageName 
+            // Check if we have a video path
+            val hasVideoPath = VideoPathManager.hasVideoPath()
+            if (!hasVideoPath) {
+                Log.w(TAG, "No video path available for preview replacement")
+                return false
             }
             
-            if (ourApp != null) {
-                Log.d(TAG, "Our app found in camera apps list")
-                
-                // Try to set as default using system settings
-                val settingsIntent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = android.net.Uri.fromParts("package", context.packageName, null)
-                }
-                
-                settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(settingsIntent)
-                
-                Log.d(TAG, "Opened settings to set as default camera app")
-                true
-            } else {
-                Log.w(TAG, "Our app not found in camera apps list")
-                false
-            }
+            Log.d(TAG, "Preview replacement mode enabled successfully")
+            true
             
         } catch (e: Exception) {
-            Log.e(TAG, "Error setting as preferred camera app: ${e.message}")
+            Log.e(TAG, "Error enabling preview replacement: ${e.message}")
             false
         }
     }
     
     /**
-     * Force launch our virtual camera for a given intent
+     * Launch preview replacement for a given camera intent
      */
-    fun forceLaunchVirtualCamera(context: Context, intent: Intent): Boolean {
+    fun launchPreviewReplacement(context: Context, intent: Intent): Boolean {
         return try {
-            Log.d(TAG, "Force launching virtual camera")
+            Log.d(TAG, "Launching preview replacement")
             
             // Initialize VideoPathManager
             VideoPathManager.initialize(context)
@@ -106,14 +91,13 @@ object CameraIntentHandler {
             // Get video path
             val videoPath = VideoPathManager.getCurrentVideoPath()
             
-            // Create virtual camera intent
-            val virtualCameraIntent = Intent(context, VirtualCameraActivity::class.java).apply {
+            // Create preview replacement intent
+            val previewIntent = Intent(context, SimpleVirtualCameraActivity::class.java).apply {
                 // Copy original intent action
                 action = intent.action
                 
-                // Add video path
-                putExtra(VirtualCameraActivity.EXTRA_VIDEO_PATH, videoPath)
-                putExtra(VirtualCameraActivity.EXTRA_IS_VIRTUAL_CAMERA, true)
+                // Add video path for preview replacement
+                putExtra(SimpleVirtualCameraActivity.EXTRA_VIDEO_PATH, videoPath)
                 
                 // Copy data and extras
                 if (intent.data != null) {
@@ -127,28 +111,28 @@ object CameraIntentHandler {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
             
-            // Launch virtual camera
-            context.startActivity(virtualCameraIntent)
-            Log.d(TAG, "Virtual camera launched successfully")
+            // Launch preview replacement
+            context.startActivity(previewIntent)
+            Log.d(TAG, "Preview replacement launched successfully")
             true
             
         } catch (e: Exception) {
-            Log.e(TAG, "Error force launching virtual camera: ${e.message}")
+            Log.e(TAG, "Error launching preview replacement: ${e.message}")
             false
         }
     }
     
     /**
-     * Check if virtual camera is ready
+     * Check if preview replacement is ready
      */
-    fun isVirtualCameraReady(context: Context): Boolean {
+    fun isPreviewReplacementReady(context: Context): Boolean {
         return try {
             VideoPathManager.initialize(context)
             val hasVideoPath = VideoPathManager.hasVideoPath()
-            Log.d(TAG, "Virtual camera ready: $hasVideoPath")
+            Log.d(TAG, "Preview replacement ready: $hasVideoPath")
             hasVideoPath
         } catch (e: Exception) {
-            Log.e(TAG, "Error checking virtual camera readiness: ${e.message}")
+            Log.e(TAG, "Error checking preview replacement readiness: ${e.message}")
             false
         }
     }

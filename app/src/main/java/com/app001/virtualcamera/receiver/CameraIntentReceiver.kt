@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.app001.virtualcamera.camera.VirtualCameraProvider
+import com.app001.virtualcamera.camera.SimpleVirtualCameraActivity
 
 /**
  * Broadcast Receiver that intercepts camera intents from other apps
@@ -31,23 +31,26 @@ class CameraIntentReceiver : BroadcastReceiver() {
         try {
             Log.d(TAG, "Handling camera intent: ${intent.action}")
             
-            // Check if virtual camera is available
-            if (!VirtualCameraProvider.isVirtualCameraAvailable(context)) {
-                Log.w(TAG, "Virtual camera not available, skipping")
-                return
+            // Create simple virtual camera intent
+            val virtualCameraIntent = Intent(context, SimpleVirtualCameraActivity::class.java).apply {
+                // Copy original intent action
+                action = intent.action
+                
+                // Copy any data from original intent
+                if (intent.data != null) {
+                    data = intent.data
+                }
+                intent.extras?.let { extras ->
+                    putExtras(extras)
+                }
+                
+                // Set flags for proper launching
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
             
-            // Create virtual camera intent
-            val virtualCameraIntent = VirtualCameraProvider.handleCameraIntent(context, intent)
-            
-            if (virtualCameraIntent != null) {
-                // Launch virtual camera
-                virtualCameraIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                context.startActivity(virtualCameraIntent)
-                Log.d(TAG, "Virtual camera launched successfully")
-            } else {
-                Log.e(TAG, "Failed to create virtual camera intent")
-            }
+            // Launch simple virtual camera
+            context.startActivity(virtualCameraIntent)
+            Log.d(TAG, "Simple virtual camera launched successfully")
             
         } catch (e: Exception) {
             Log.e(TAG, "Error handling camera intent: ${e.message}")

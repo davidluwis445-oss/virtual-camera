@@ -75,6 +75,7 @@ fun PreviewScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        
         // Header
         Text(
             text = "Video Preview",

@@ -107,8 +107,8 @@ fun AdvancedSetupScreen(
                 availableVideoDevices = listOf("/dev/video0", "/dev/video1", "/dev/video2") // Simulate devices
             }
             
-            // Check if this app is the default camera app
-            isDefaultCameraApp = systemVirtualCamera.isDefaultCameraApp()
+            // Check if preview replacement is enabled
+            isDefaultCameraApp = systemVirtualCamera.isPreviewReplacementEnabled()
             
             // Get current camera mode
             isFrontCamera = systemVirtualCamera.getCameraMode()
@@ -295,18 +295,18 @@ fun AdvancedSetupScreen(
                         val installSuccess = systemVirtualCamera.installAsSystemApp()
                         
                         if (installSuccess) {
-                            Toast.makeText(context, "🔧 Configuring camera settings...", Toast.LENGTH_SHORT).show()
-                            val disableSuccess = systemVirtualCamera.disableDefaultCamera()
+                            Toast.makeText(context, "🔧 Configuring preview replacement...", Toast.LENGTH_SHORT).show()
+                            val previewSuccess = systemVirtualCamera.enablePreviewReplacementMode()
                             
                             isSystemAppInstalled = installSuccess
-                            isDefaultCameraDisabled = disableSuccess
+                            isDefaultCameraDisabled = previewSuccess
                             
-                            if (installSuccess && disableSuccess) {
-                                Toast.makeText(context, "✅ Camera app setup successful! App can now act as a camera.", Toast.LENGTH_LONG).show()
+                            if (installSuccess && previewSuccess) {
+                                Toast.makeText(context, "✅ Preview replacement setup successful! App can now replace camera preview.", Toast.LENGTH_LONG).show()
                             } else if (installSuccess) {
-                                Toast.makeText(context, "✅ Camera app setup successful! App can act as camera (no root required).", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "✅ Preview replacement setup successful! App can replace preview (no root required).", Toast.LENGTH_LONG).show()
                             } else {
-                                Toast.makeText(context, "✅ Camera app setup successful! App registered as camera app.", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "✅ Preview replacement setup successful! App registered for preview replacement.", Toast.LENGTH_LONG).show()
                             }
                         } else {
                             Toast.makeText(context, "✅ Camera app setup successful! App can act as camera.", Toast.LENGTH_LONG).show()
@@ -400,13 +400,13 @@ fun AdvancedSetupScreen(
                             containerColor = if (isFrontCamera) Color(0xFF9C27B0) else Color(0xFFE1BEE7)
                         )
                     ) {
-                        Icon(
+                        /*Icon(
                             imageVector = Icons.Default.Face,
                             contentDescription = null,
                             modifier = Modifier.size(16.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Front Camera (Selfie)")
+                        Spacer(modifier = Modifier.width(8.dp))*/
+                        Text("Front Camera")
                     }
                     
                     Button(
@@ -419,12 +419,12 @@ fun AdvancedSetupScreen(
                             containerColor = if (!isFrontCamera) Color(0xFF9C27B0) else Color(0xFFE1BEE7)
                         )
                     ) {
-                        Icon(
+                        /*Icon(
                             imageVector = Icons.Default.Camera,
                             contentDescription = null,
                             modifier = Modifier.size(16.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(8.dp))*/
                         Text("Back Camera")
                     }
                 }
@@ -479,11 +479,11 @@ fun AdvancedSetupScreen(
                     ) {
                         Button(
                             onClick = {
-                                val success = systemVirtualCamera.setAsDefaultCameraApp()
+                                val success = systemVirtualCamera.enablePreviewReplacementMode()
                                 if (success) {
-                                    Toast.makeText(context, "📱 Opening settings to set as default camera app", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, "📱 Preview replacement mode enabled", Toast.LENGTH_LONG).show()
                                 } else {
-                                    Toast.makeText(context, "❌ Failed to open settings", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "❌ Failed to enable preview replacement", Toast.LENGTH_SHORT).show()
                                 }
                             },
                             colors = ButtonDefaults.buttonColors(
@@ -496,16 +496,16 @@ fun AdvancedSetupScreen(
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Set as Default")
+                            Text("Enable Preview")
                         }
                         
                         Button(
                             onClick = {
-                                val success = systemVirtualCamera.forceLaunchVirtualCamera()
+                                val success = systemVirtualCamera.launchPreviewReplacement()
                                 if (success) {
-                                    Toast.makeText(context, "🎥 Testing virtual camera launch", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "🎥 Testing preview replacement launch", Toast.LENGTH_SHORT).show()
                                 } else {
-                                    Toast.makeText(context, "❌ Failed to launch virtual camera", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(context, "❌ Failed to launch preview replacement", Toast.LENGTH_SHORT).show()
                                 }
                             },
                             colors = ButtonDefaults.buttonColors(
@@ -610,17 +610,17 @@ fun AdvancedSetupScreen(
                             containerColor = Color(0xFF4CAF50)
                         )
                     ) {
-                        Icon(
+                        /*Icon(
                             imageVector = Icons.Default.PlayArrow,
                             contentDescription = "Start",
                             modifier = Modifier.size(16.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(8.dp))*/
                         Text(
                             if (selectedVideoPath != null) {
-                                "Start Virtual Camera with Video"
+                                "Start Replacing"
                             } else {
-                                "Start Virtual Camera (Test Pattern)"
+                                "Start Replacing"
                             }
                         )
                     }
@@ -639,13 +639,13 @@ fun AdvancedSetupScreen(
                             containerColor = Color(0xFFE65100)
                         )
                     ) {
-                        Icon(
+                        /*Icon(
                             imageVector = Icons.Default.Stop,
                             contentDescription = "Stop",
                             modifier = Modifier.size(16.dp)
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Stop Virtual Camera")
+                        Spacer(modifier = Modifier.width(8.dp))*/
+                        Text("Stop Replacing")
                     }
                 }
             }
